@@ -54,6 +54,9 @@
 #elif MB(SAV_MKI)
   #define MACHINE_NAME "SAV MkI"
   #define FIRMWARE_URL "https://github.com/fmalpartida/Marlin/tree/SAV-MkI-config"
+#elif MB(CREALITY_ENDER)
+  #define MACHINE_NAME "Ender 3D"
+  #define FIRMWARE_URL "http://www.mendel-parts.com"
 #else
   #ifdef CUSTOM_MENDEL_NAME
     #define MACHINE_NAME CUSTOM_MENDEL_NAME

@@ -264,11 +264,13 @@ static void lcd_status_screen()
     if (current_click)
     {
         lcd_goto_menu(lcd_main_menu);
+#if !MB(CREALITY_ENDER)
         lcd_implementation_init( // to maybe revive the LCD if static electricity killed it.
           #if defined(LCD_PROGRESS_BAR) && defined(SDSUPPORT)
             currentMenu == lcd_status_screen
           #endif
         );
+#endif // MB(CREALITY_ENDER)
         #ifdef FILAMENT_LCD_DISPLAY
           message_millis = millis();  // get status message to show up for a while
         #endif
@@ -747,7 +749,7 @@ static void lcd_control_menu()
     MENU_ITEM(submenu, MSG_MOTION, lcd_control_motion_menu);
 	MENU_ITEM(submenu, MSG_VOLUMETRIC, lcd_control_volumetric_menu);
 
-#ifdef DOGLCD
+#if defined(DOGLCD) && !MB(CREALITY_ENDER)
 //    MENU_ITEM_EDIT(int3, MSG_CONTRAST, &lcd_contrast, 0, 63);
     MENU_ITEM(submenu, MSG_CONTRAST, lcd_set_contrast);
 #endif
@@ -895,7 +897,7 @@ static void lcd_control_volumetric_menu()
 	END_MENU();
 }
 
-#ifdef DOGLCD
+#if defined(DOGLCD) && !MB(CREALITY_ENDER)
 static void lcd_set_contrast()
 {
     if (encoderPosition != 0)
@@ -1534,7 +1536,7 @@ char *ftostr43(const float &x)
 char *ftostr12ns(const float &x)
 {
   long xx=x*100;
-  
+
   xx=abs(xx);
   conv[0]=(xx/100)%10+'0';
   conv[1]='.';

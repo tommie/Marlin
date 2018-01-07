@@ -34,7 +34,11 @@
 #endif
 
 #include <U8glib.h>
-#include "DOGMbitmaps.h"
+#if MB(CREALITY_ENDER)
+# include "DOGMbitmaps_creality_ender.h"
+#else
+# include "DOGMbitmaps.h"
+#endif // MB(CREALITY_ENDER)
 #include "dogm_font_data_marlin.h"
 #include "ultralcd.h"
 #include "ultralcd_st7920_u8glib_rrd.h"
@@ -80,6 +84,8 @@ U8GLIB_ST7920_128X64_RRD u8g(0);
 #elif defined(MAKRPANEL)
 // The MaKrPanel display, ST7565 controller as well
 U8GLIB_NHD_C12864 u8g(DOGLCD_CS, DOGLCD_A0);
+#elif MB(CREALITY_ENDER)
+U8GLIB_MINI12864 u8g(DOGLCD_CS, DOGLCD_A0);
 #else
 // for regular DOGM128 display with HW-SPI
 U8GLIB_DOGM128 u8g(DOGLCD_CS, DOGLCD_A0);	// HW-SPI Com: CS, A0
@@ -92,7 +98,9 @@ static void lcd_implementation_init()
 	digitalWrite(LCD_PIN_BL, HIGH);
 #endif
 
-        u8g.setContrast(lcd_contrast);	
+#if !MB(CREALITY_ENDER)
+        u8g.setContrast(lcd_contrast);
+#endif // !MB(CREALITY_ENDER)
 	//  Uncomment this if you have the first generation (V1.10) of STBs board
 	//  pinMode(17, OUTPUT);	// Enable LCD backlight
 	//  digitalWrite(17, HIGH);
@@ -122,9 +130,10 @@ static void lcd_implementation_init()
 	do {
 			// RepRap init bmp
 			u8g.drawBitmapP(0,0,START_BMPBYTEWIDTH,START_BMPHEIGHT,start_bmp);
+#if !MB(CREALITY_ENDER)
 			// Welcome message
 			u8g.setFont(u8g_font_6x10_marlin);
-			u8g.drawStr(62,10,"MARLIN"); 
+			u8g.drawStr(62,10,"MARLIN");
 			u8g.setFont(u8g_font_5x8);
 			u8g.drawStr(62,19,"V1.0.2");
 			u8g.setFont(u8g_font_6x10_marlin);
@@ -137,6 +146,7 @@ static void lcd_implementation_init()
 			u8g.drawStr(62,61,"uses u");
 			u8g.drawStr90(92,57,"8");
 			u8g.drawStr(100,61,"glib");
+#endif // !MB(CREALITY_ENDER)
 	   } while( u8g.nextPage() );
 }
 
@@ -192,8 +202,8 @@ static void lcd_implementation_status_screen()
  u8g.setColorIndex(1);	// black on white
  
  // Symbols menu graphics, animated fan
- u8g.drawBitmapP(9,1,STATUS_SCREENBYTEWIDTH,STATUS_SCREENHEIGHT, (blink % 2) && fanSpeed ? status_screen0_bmp : status_screen1_bmp);
- 
+ u8g.drawBitmapP(0,1,STATUS_SCREENBYTEWIDTH,STATUS_SCREENHEIGHT, (blink % 2) && fanSpeed ? status_screen0_bmp : status_screen1_bmp);
+
  #ifdef SDSUPPORT
  //SD Card Symbol
  u8g.drawBox(42,42,8,7);
@@ -229,7 +239,7 @@ static void lcd_implementation_status_screen()
  #endif
  
   // Extruders
-  _draw_heater_status(6, 0);
+  _draw_heater_status(39, 0);
   #if EXTRUDERS > 1
     _draw_heater_status(31, 1);
     #if EXTRUDERS > 2
@@ -238,11 +248,11 @@ static void lcd_implementation_status_screen()
   #endif
 
   // Heatbed
-  _draw_heater_status(81, -1);
- 
+  _draw_heater_status(72, -1);
+
  // Fan
  u8g.setFont(FONT_STATUSMENU);
- u8g.setPrintPos(104,27);
+ u8g.setPrintPos(103,27);
  #if defined(FAN_PIN) && FAN_PIN > -1
  u8g.print(itostr3(int((fanSpeed*100)/256 + 1)));
  u8g.print("%");

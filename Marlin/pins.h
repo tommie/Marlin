@@ -1165,6 +1165,9 @@
 #if MB(AZTEEG_X1)
 #define AZTEEG_X1
 #endif
+#if MB(CREALITY_ENDER)
+#  define SANGUINOLOLU_V_1_2
+#endif
 #if MB(SANGUINOLOLU_12) || MB(MELZI) || MB(STB_11) || MB(AZTEEG_X1) || MB(MELZI_1284)
 #undef MOTHERBOARD
 #define MOTHERBOARD BOARD_SANGUINOLOLU_11
@@ -1175,7 +1178,7 @@
 #endif
 #endif
 
-#if MB(SANGUINOLOLU_11)
+#if MB(SANGUINOLOLU_11) || defined(SANGUINOLOLU_V_1_2)
 #define KNOWN_BOARD 1
 #ifndef __AVR_ATmega644P__
 #ifndef __AVR_ATmega1284P__
@@ -1218,6 +1221,11 @@
 
 #ifdef AZTEEG_X1
  #define FAN_PIN            4
+#endif
+
+#if MB(CREALITY_ENDER)
+  #undef FAN_PIN
+  #define FAN_PIN           4
 #endif
 
 #ifdef NUM_SERVOS
@@ -1265,10 +1273,10 @@
 
 #endif
 
-#define TEMP_0_PIN          7   // MUST USE ANALOG INPUT NUMBERING NOT DIGITAL OUTPUT NUMBERING!!!!!!!!! (pin 33 extruder)
+#define TEMP_0_PIN          7   // MUST USE ANALOG INPUT NUMBERING NOT DIGITAL OUTPUT NUMBERING!!!!!!!!! (pin 31 extruder)
 #define TEMP_1_PIN         -1
 #define TEMP_2_PIN         -1
-#define TEMP_BED_PIN        6   // MUST USE ANALOG INPUT NUMBERING NOT DIGITAL OUTPUT NUMBERING!!!!!!!!! (pin 34 bed)
+#define TEMP_BED_PIN        6   // MUST USE ANALOG INPUT NUMBERING NOT DIGITAL OUTPUT NUMBERING!!!!!!!!! (pin 30 bed)
 #define SDPOWER            -1
 #define SDSS               31
 
@@ -1277,20 +1285,35 @@
 
  #ifdef ULTRA_LCD
    #ifdef NEWPANEL
-     //we have no buzzer installed
-     #define BEEPER -1
+     #if MB(CREALITY_ENDER)
+       // Pins 27, 17 (unused) are routed to connector OFF.
+       #define BEEPER 27
+     #else
+       //we have no buzzer installed
+       #define BEEPER -1
+     #endif // MB(CREALITY_ENDER)
      //LCD Pins
      #ifdef DOGLCD
        // Pins for DOGM SPI LCD Support
-       #define DOGLCD_A0  30
-       #define DOGLCD_CS  29
+       #if MB(CREALITY_ENDER)
+         #define DOGLCD_A0  30
+         #define DOGLCD_CS  28
+         // Pin 29 is routed to connector CHECK (unused).
+       #else
+         #define DOGLCD_A0  30
+         #define DOGLCD_CS  29
+       #endif // MB(CREALITY_ENDER)
        // GLCD features
        #define LCD_CONTRAST 1
        // Uncomment screen orientation
-         // #define LCD_SCREEN_ROT_0
-         // #define LCD_SCREEN_ROT_90
-       #define LCD_SCREEN_ROT_180
-         // #define LCD_SCREEN_ROT_270
+         #if MB(CREALITY_ENDER)
+           #define LCD_SCREEN_ROT_0
+         #else // MB(CREALITY_ENDER)
+           // #define LCD_SCREEN_ROT_0
+           // #define LCD_SCREEN_ROT_90
+           #define LCD_SCREEN_ROT_180
+           // #define LCD_SCREEN_ROT_270
+         #endif // MB(CREALITY_ENDER)
        #else // standard Hitachi LCD controller
        #define LCD_PINS_RS        4
        #define LCD_PINS_ENABLE    17
