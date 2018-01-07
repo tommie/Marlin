@@ -115,7 +115,14 @@
 // When only one extruder is selected, the "1" on the symbol will not
 // be displayed.
 
-#if HAS_TEMP_BED
+#ifdef CUSTOM_STATUS_SCREEN_FILE
+  #define STATUS_SCREENHEIGHT 19  // Height in pixels
+
+  // This file must define STATUS_SCREEN{WIDTH,HEIGHT,BYTEWIDTH} and status_screen{0,1}_bmp.
+  // It can also define STATUS_SCREEN_X, STATUS_SCREEN_{BED,FAN}_TEXT_X and
+  // STATUS_SCREEN_HOTEND_TEXT_X(i) to modify draw locations.
+  #include CUSTOM_STATUS_SCREEN_FILE
+#elif HAS_TEMP_BED
   #if HOTENDS == 1
     #define STATUS_SCREENWIDTH     115 //Width in pixels
     #define STATUS_SCREENHEIGHT     19 //Height in pixels
@@ -420,3 +427,16 @@
     };
   #endif // Extruders
 #endif // HAS_TEMP_BED
+
+#ifndef STATUS_SCREEN_X
+  #define STATUS_SCREEN_X 9
+#endif
+#ifndef STATUS_SCREEN_HOTEND_TEXT_X
+  #define STATUS_SCREEN_HOTEND_TEXT_X(i) (5 + (i) * 25)
+#endif
+#ifndef STATUS_SCREEN_BED_TEXT_X
+  #define STATUS_SCREEN_BED_TEXT_X 81
+#endif
+#ifndef STATUS_SCREEN_FAN_TEXT_X
+  #define STATUS_SCREEN_FAN_X 104
+#endif
