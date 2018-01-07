@@ -173,7 +173,7 @@ MCU              ?= atmega1284p
 else ifeq  ($(HARDWARE_MOTHERBOARD),66)
 HARDWARE_VARIANT ?= Sanguino
 MCU              ?= atmega1284p
-else ifeq  ($(HARDWARE_MOTHERBOARD),69)
+else ifeq  ($(HARDWARE_MOTHERBOARD),601)
 HARDWARE_VARIANT ?= Sanguino
 MCU              ?= atmega1284p
 
