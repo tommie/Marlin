@@ -399,7 +399,9 @@ static void lcd_implementation_status_screen() {
 
   if (PAGE_UNDER(STATUS_SCREENHEIGHT + 1)) {
 
-    u8g.drawBitmapP(9, 1, STATUS_SCREENBYTEWIDTH, STATUS_SCREENHEIGHT,
+    u8g.drawBitmapP(
+      STATUS_SCREEN_X, 1,
+      STATUS_SCREENBYTEWIDTH, STATUS_SCREENHEIGHT,
       #if HAS_FAN0
         blink && fanSpeeds[0] ? status_screen0_bmp : status_screen1_bmp
       #else
@@ -415,11 +417,11 @@ static void lcd_implementation_status_screen() {
 
   if (PAGE_UNDER(28)) {
     // Extruders
-    HOTEND_LOOP() _draw_heater_status(5 + e * 25, e);
+    HOTEND_LOOP() _draw_heater_status(STATUS_SCREEN_HOTEND_TEXT_X(e), e);
 
     // Heated bed
     #if HOTENDS < 4 && HAS_TEMP_BED
-      _draw_heater_status(81, -1);
+      _draw_heater_status(STATUS_SCREEN_BED_TEXT_X, -1);
     #endif
 
     #if HAS_FAN0
@@ -427,7 +429,7 @@ static void lcd_implementation_status_screen() {
         // Fan
         const int per = ((fanSpeeds[0] + 1) * 100) / 256;
         if (per) {
-          u8g.setPrintPos(104, 27);
+          u8g.setPrintPos(STATUS_SCREEN_FAN_TEXT_X, 27);
           lcd_print(itostr3(per));
           u8g.print('%');
         }

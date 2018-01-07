@@ -95,6 +95,8 @@
   #include "pins_AZTEEG_X3.h"
 #elif MB(AZTEEG_X3_PRO)
   #include "pins_AZTEEG_X3_PRO.h"
+#elif MB(CREALITY_ENDER)
+  #include "pins_CREALITY_ENDER.h"
 #elif MB(ULTIMAKER)
   #include "pins_ULTIMAKER.h"
 #elif MB(ULTIMAKER_OLD)
